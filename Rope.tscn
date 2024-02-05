@@ -1,0 +1,62 @@
+[gd_scene load_steps=3 format=3 uid="uid://dgtqpvtdvlqsn"]
+
+[ext_resource type="PackedScene" uid="uid://b8pknsyx2j2no" path="res://rope_end_piece.tscn" id="1_87st8"]
+
+[sub_resource type="GDScript" id="GDScript_ox14i"]
+resource_name = "Rope"
+script/source = "extends Node2D
+
+@onready var rope_start_piece = $RopeStartPiece
+@onready var rope_end_piece = $RopeEndPiece
+
+var RopePiece = preload(\"res://rope_piece.tscn\")
+var piece_length := 4.0
+var rope_parts := []
+var rope_close_tolerance := 4.0
+
+func spawn_rope(start_pos:Vector2, end_pos:Vector2):
+	rope_start_piece.global_position = start_pos
+	rope_end_piece.global_position = end_pos
+	print(rope_start_piece)
+	start_pos = rope_start_piece.get_node(\"C/J\").global_position
+	end_pos = rope_end_piece.get_node(\"C/J\").global_position
+	
+	var distance = start_pos.distance_to(end_pos)
+	var segment_amount = round(distance/piece_length)
+	var spawn_angle = (end_pos-start_pos).angle() - PI/2
+	
+	for i in segment_amount:
+		print(i)
+
+func create_rope(pieces_amount: int, parent: Object, end_pos: Vector2, spawn_angle:float) -> void:
+	for i in pieces_amount:
+		parent = add_piece(parent, i, spawn_angle)
+		parent.set_name(\"rope_piece_\" + str(i))
+		rope_parts.append(parent)
+		
+		var joint_pos = parent.get_node(\"C/J\").global_position
+		if joint_pos.distance_to(end_pos) < rope_close_tolerance:
+			break
+			
+	rope_end_piece.get_node(\"C/J\").node_a = rope_end_piece.get_path()
+	rope_end_piece.get_node(\"C/J\").node_b = rope_parts[-1].get_path()
+
+func add_piece(parent: Object, id: int, spawn_angle:float) -> Object:
+	var joint : PinJoint2D = parent.get_node(\"C/J\") as PinJoint2D
+	var piece : Object = RopePiece.instantiate() as Object
+	piece.global_position = joint.global_position
+	piece.parent = self
+	piece.id = id
+	add_child(piece)
+	joint.node_a = parent.get_path()
+	joint.node_b = piece.get_path()
+	
+	return piece
+"
+
+[node name="Rope" type="Node2D"]
+script = SubResource("GDScript_ox14i")
+
+[node name="RopeEndPiece" parent="." instance=ExtResource("1_87st8")]
+
+[node name="RopeStartPiece" parent="." instance=ExtResource("1_87st8")]

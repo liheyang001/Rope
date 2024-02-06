@@ -1,7 +1,17 @@
-[gd_scene load_steps=2 format=3 uid="uid://cvybftg7miu2l"]
+[gd_scene load_steps=5 format=3 uid="uid://cvybftg7miu2l"]
 
 [ext_resource type="PackedScene" uid="uid://do1cfhibcvpdx" path="res://bg.tscn" id="1_awfdn"]
+[ext_resource type="Script" path="res://main.gd" id="1_rbxkn"]
+[ext_resource type="PackedScene" uid="uid://c3cmxkfidjypv" path="res://Player.tscn" id="2_1glay"]
+[ext_resource type="PackedScene" uid="uid://cel6jlsdqp7d4" path="res://Rope.tscn" id="4_xcosi"]
 
 [node name="mainScene" type="Node2D"]
+script = ExtResource("1_rbxkn")
 
 [node name="BG" parent="." instance=ExtResource("1_awfdn")]
+
+[node name="Player" parent="." instance=ExtResource("2_1glay")]
+position = Vector2(391, -59)
+
+[node name="Rope" parent="." instance=ExtResource("4_xcosi")]
+position = Vector2(349, -7)

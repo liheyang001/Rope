@@ -1,0 +1,67 @@
+[gd_scene load_steps=4 format=3 uid="uid://c3cmxkfidjypv"]
+
+[ext_resource type="Texture2D" uid="uid://cn5iceku2y6mm" path="res://icon.svg" id="1_h30pw"]
+
+[sub_resource type="GDScript" id="GDScript_vj8mq"]
+script/source = "extends RigidBody2D
+
+var velocity = Vector2()
+@export var player_movement_speed = 200
+var movement = Vector2()
+
+enum State {
+	Air,
+	Rope
+}
+
+var current_state = State.Rope
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	
+	
+	if Input.is_action_pressed(\"ui_down\"):
+		movement.y += 2
+	if Input.is_action_pressed(\"ui_up\"):
+		movement.y -= 2
+	# Normalize diagonal movement
+	movement = movement.normalized()
+
+	# Move the player
+	position += movement * player_movement_speed * delta
+
+func _physics_process(delta):
+	if current_state == State.Rope:
+		print(\"player entered\")
+		movement.y += 1
+		
+	if current_state == State.Air:
+		print(\"player Exited\")
+		movement.y += 10
+
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hyu1p"]
+size = Vector2(71, 63)
+
+[node name="Player" type="RigidBody2D"]
+script = SubResource("GDScript_vj8mq")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_hyu1p")
+
+[node name="Icon" type="Sprite2D" parent="CollisionShape2D"]
+position = Vector2(0.499997, 0.499998)
+scale = Vector2(0.570313, 0.476562)
+texture = ExtResource("1_h30pw")
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+target_position = Vector2(2000, 0)
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="tree_entered" from="." to="." method="_on_tree_entered"]

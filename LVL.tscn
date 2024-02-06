@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3 uid="uid://bp8q410oyovxc"]
+
+[ext_resource type="PackedScene" uid="uid://c3cmxkfidjypv" path="res://Player.tscn" id="1_6qvnd"]
+[ext_resource type="Script" path="res://LVL.gd" id="1_age81"]
+[ext_resource type="PackedScene" uid="uid://clhryr3wowif7" path="res://TestObj.tscn" id="3_a8x2o"]
+
+[node name="LVL" type="Node2D"]
+script = ExtResource("1_age81")
+
+[node name="Player" parent="." instance=ExtResource("1_6qvnd")]
+position = Vector2(104, 47)
+
+[node name="gg" type="DampedSpringJoint2D" parent="."]
+node_a = NodePath("../Player")
+
+[node name="StaticBody2D" parent="." instance=ExtResource("3_a8x2o")]
+position = Vector2(289, 78)
+
+[node name="StaticBody2D2" parent="." instance=ExtResource("3_a8x2o")]
+position = Vector2(560, 209)
+
+[node name="StaticBody2D3" parent="." instance=ExtResource("3_a8x2o")]
+position = Vector2(457, 483)
+
+[node name="StaticBody2D4" parent="." instance=ExtResource("3_a8x2o")]
+position = Vector2(146, 550)
